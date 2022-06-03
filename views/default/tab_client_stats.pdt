@@ -1,0 +1,90 @@
+
+<?php
+// source: https://stackoverflow.com/a/2510459
+function formatBytes($bytes, $precision = 2) {
+    $units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+    $bytes = max($bytes*1024, 0);
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+    $pow = min($pow, count($units) - 1);
+
+    // Uncomment one of the following alternatives
+    $bytes /= pow(1024, $pow);
+    // $bytes /= (1 << (10 * $pow));
+
+    return round($bytes, $precision) . ' ' . $units[$pow];
+}
+?>
+    <h4><?php $this->_('Froxlor.tab_client_stats.info_title');?></h4>
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 50%;"><?php $this->_('Froxlor.tab_client_stats.info_heading.field');?></th>
+                    <th><?php $this->_('Froxlor.tab_client_stats.info_heading.value');?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            $keys = ['customers', 'domains', 'subdomains', 'emails', 'email_accounts', 'email_forwarders', 'ftps', 'mysqls', 'documentroot'];
+            $keys_no_used = ['documentroot'];
+            $keys_boolean = [];
+            $keys_available = [];
+            foreach ($keys as $key) {
+                if (isset($stats[$key])) {
+                    $keys_available[] = $key;
+                }
+            }
+            foreach ($keys_available as $i => $key) {
+                if (is_numeric($stats[$key]) && $stats[$key] < 0) {
+                    $stats[$key] = '∞';
+                }
+                ?>
+                <tr>
+                    <td><?php $this->_('Froxlor.tab_client_stats.info.' . $key);?></td>
+                    <td><?php if(in_array($key, $keys_no_used)){ echo $this->Html->safe($stats[$key]); } else if(in_array($key, $keys_boolean)){ $this->Html->safe($stats[$key]) ? $this->_('Froxlor.tab_stats.info.enabled') : $this->_('Froxlor.tab_stats.info.disabled'); } else { echo $this->Html->safe($stats[$key . '_used']) . ' / ' . $this->Html->safe($stats[$key]); } ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
+
+    <label><?php $this->_('Froxlor.tab_client_stats.disk_title');?></label>
+    <?php
+    $disk = [
+        'used' => round((isset($stats['diskspace_used']) ? $stats['diskspace_used'] : 0), 2),
+        'limit' => round((isset($stats['diskspace']) ? $stats['diskspace'] : 0), 2)
+    ];
+    $unlimited = ($disk['limit'] == '∞');
+    $percent_used = ($unlimited ? 0 : round(((isset($disk['used']) ? $disk['used'] : 0)/(isset($disk['limit']) ? $disk['limit'] : 1))*100, 0));
+    ?>
+    <small>
+        <?php echo ($unlimited ? $this->_('Froxlor.tab_client_stats.usage_unlimited', true, $this->Html->safe($disk['used'])) : $this->_('Froxlor.tab_client_stats.usage', true, formatBytes(round($this->Html->safe($disk['used']))), formatBytes(round($this->Html->safe($disk['limit'])))));?>
+    </small>
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>%" aria-valuenow="<?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>" aria-valuemin="0" aria-valuemax="100">
+            <span class="sr-only"><?php echo ($unlimited ? $this->_('Froxlor.tab_client_stats.usage_unlimited', true, formatBytes(round($this->Html->safe($disk['used'])))) : $this->_('Froxlor.tab_client_stats.usage', true, $this->Html->safe($disk['used']), $this->Html->safe($disk['limit'])));?></span>
+        </div>
+    </div>
+
+    <label><?php $this->_('Froxlor.tab_client_stats.bandwidth_title');?></label>
+    <?php
+    $bandwidth = [
+        'used' => round((isset($stats['traffic_used']) ? $stats['traffic_used'] : 0), 2),
+        'limit' => round((isset($stats['traffic']) ? $stats['traffic'] : 0), 2)
+    ];
+    $unlimited = ($bandwidth['limit'] == '∞');
+    $percent_used = ($unlimited ? 0 : round(((isset($bandwidth['used']) ? $bandwidth['used'] : 0)/(isset($bandwidth['limit']) ? $bandwidth['limit'] : 1))*100, 0));
+    ?>
+    <small>
+        <?php echo ($unlimited ? $this->_('Froxlor.tab_client_stats.usage_unlimited', true, formatBytes(round($this->Html->safe($bandwidth['used'])))) : $this->_('Froxlor.tab_client_stats.usage', true, formatBytes(round($this->Html->safe($bandwidth['used']))), formatBytes(round($this->Html->safe($bandwidth['limit'])))));?>
+    </small>
+    <div class="progress">
+        <div class="progress-bar bg-danger" role="progressbar" style="width: <?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>%" aria-valuenow="<?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>" aria-valuemin="0" aria-valuemax="100">
+            <span class="sr-only"><?php echo ($unlimited ? $this->_('Froxlor.tab_client_stats.usage_unlimited', true, $this->Html->safe($bandwidth['used'])) : $this->_('Froxlor.tab_client_stats.usage', true, $this->Html->safe($bandwidth['used']), $this->Html->safe($bandwidth['limit'])));?></span>
+        </div>
+    </div>

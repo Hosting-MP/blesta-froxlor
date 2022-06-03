@@ -1,0 +1,43 @@
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-share fa-flip-vertical"></i></th>
+                    <th><?php $this->_('Froxlor.service_info.username');?></th>
+                    <th><?php $this->_('Froxlor.service_info.password');?></th>
+                    <th><?php $this->_('Froxlor.service_info.server');?></th>
+                    <th><?php $this->_('Froxlor.service_info.options');?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><?php echo (isset($service_fields->froxlor_username) ? $this->Html->safe($service_fields->froxlor_username) : null);?></td>
+                    <td><?php echo (isset($service_fields->froxlor_password) ? $this->Html->safe($service_fields->froxlor_password) : null);?></td>
+                    <td><?php echo (isset($module_row->meta->host_name) ? $this->Html->safe($module_row->meta->host_name) : null);?></td>
+                    <td>
+                        <?php
+                        $this->Form->create($this->Html->safe('http' . (isset($module_row->meta->use_ssl) && $module_row->meta->use_ssl == 'false' ? '' : 's') . '://' . (isset($module_row->meta->host_name) ? $module_row->meta->host_name : null) . '/index.php'), ['target' => '_blank']);
+                        $this->Form->fieldHidden('loginname', (isset($service_fields->froxlor_username) ? $service_fields->froxlor_username : null));
+                        $this->Form->fieldHidden('password', (isset($service_fields->froxlor_password) ? $service_fields->froxlor_password : null));
+                        $this->Form->fieldHidden('send', 'send');
+                        ?>
+                        <a id="froxlor_login<?php $this->Html->_($service->id);?>" href="#"><?php $this->_('Froxlor.service_info.option_login');?></a>
+                        <?php
+                        $this->Form->end();
+                        ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#froxlor_login<?php $this->Html->_($service->id);?>').click(function(e) {
+                e.preventDefault();
+
+                $(this).closest('form').submit();
+            });
+        });
+    </script>

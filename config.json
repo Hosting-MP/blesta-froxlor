@@ -1,0 +1,25 @@
+{
+    "version": "1.1.0",
+    "name": "Froxlor.name",
+    "description": "Froxlor.description",
+    "authors": [
+        {
+            "name": "Timo Stramann",
+            "url": "https://edvservicetimostramann.de"
+        }
+    ],
+    "service": {
+        "name_key": "froxlor_domain"
+    },
+    "module": {
+        "row": "Froxlor.module_row",
+        "rows": "Froxlor.module_row_plural",
+        "group": "Froxlor.module_group",
+        "row_key": "server_name"
+    },
+    "email_tags": {
+        "module": ["host_name"],
+        "package": ["type", "package", "account_limit"],
+        "service": ["froxlor_username", "froxlor_password", "froxlor_domain"]
+    }
+}

@@ -1,0 +1,114 @@
+
+<?php
+// source: https://stackoverflow.com/a/2510459
+function formatBytes($bytes, $precision = 2) {
+    $units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+    $bytes = max($bytes*1024, 0);
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+    $pow = min($pow, count($units) - 1);
+
+    // Uncomment one of the following alternatives
+    $bytes /= pow(1024, $pow);
+    // $bytes /= (1 << (10 * $pow));
+
+    return round($bytes, $precision) . ' ' . $units[$pow];
+}
+?>
+    <div class="title_row first">
+        <h3><?php $this->_('Froxlor.tab_stats.info_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Froxlor.tab_stats.info_heading.field');?></td>
+                    <td class="last"><?php $this->_('Froxlor.tab_stats.info_heading.value');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $keys = ['customers', 'domains', 'subdomains', 'emails', 'email_accounts', 'email_forwarders', 'ftps', 'mysqls', 'documentroot', 'api_allowed'];
+                $keys_no_used = ['documentroot'];
+                $keys_boolean = ['api_allowed'];
+                $keys_available = [];
+                foreach ($keys as $key) {
+                    if (isset($stats[$key])) {
+                        $keys_available[] = $key;
+                    }
+                }
+                foreach ($keys_available as $i => $key) {
+                    if (is_numeric($stats[$key]) && $stats[$key] < 0) {
+                        $stats[$key] = '∞';
+                    }
+                    ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i%2 == 1) ? ' class="odd_row"' : '', '');?>>
+                        <td><?php $this->_('Froxlor.tab_stats.info.' . $key);?></td>
+                        <td><?php if(in_array($key, $keys_no_used)){ echo $this->Html->safe($stats[$key]); } else if(in_array($key, $keys_boolean)){ $this->Html->safe($stats[$key]) ? $this->_('Froxlor.tab_stats.info.enabled') : $this->_('Froxlor.tab_stats.info.disabled'); } else { echo $this->Html->safe($stats[$key . '_used']) . ' / ' . $this->Html->safe($stats[$key]); } ?></td>
+                    </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Froxlor.tab_stats.bandwidth_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Froxlor.tab_stats.bandwidth_heading.used');?></td>
+                    <td class="last"><?php $this->_('Froxlor.tab_stats.bandwidth_heading.limit');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <?php
+                        $usage = (isset($stats['traffic_used']) ? $stats['traffic_used'] : 0);
+                        $this->_('Froxlor.tab_stats.bandwidth_value', false, round($usage, 2));
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+                        $limit = (isset($stats['traffic']) ? $stats['traffic'] : 0);
+                        $this->_(((isset($stats['traffic']) ? $stats['traffic'] : null) == '∞' ? 'Froxlor.tab_stats.bandwidth_unlimited' : 'Froxlor.tab_stats.bandwidth_value'), false, formatBytes(round($limit)));
+                        ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Froxlor.tab_stats.disk_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Froxlor.tab_stats.disk_heading.used');?></td>
+                    <td class="last"><?php $this->_('Froxlor.tab_stats.disk_heading.limit');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <?php
+                        $usage = (isset($stats['diskspace_used']) ? $stats['diskspace_used'] : 0);
+                        $this->_('Froxlor.tab_stats.disk_value', false, round($usage, 2));
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+                        $limit = (isset($stats['diskspace']) ? $stats['diskspace'] : 0);
+                        $this->_(((isset($stats['diskspace']) ? $stats['diskspace'] : null) == '∞' ? 'Froxlor.tab_stats.disk_unlimited' : 'Froxlor.tab_stats.disk_value'), false, formatBytes(round($limit)));
+                        ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
