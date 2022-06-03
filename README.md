@@ -19,9 +19,9 @@ to a /components/modules/froxlor/ directory within your Blesta installation path
 
 5. You're done!
 
-### Blesta Compatibility
+### Blesta and Froxlor Compatibility
 
-|Blesta Version|Module Version|
-|--------------|--------------|
-| > v5.0.0     | v1.1.0       |
-| >= v4.1.0    | v1.0.0       |
+|Blesta Version|Froxlor Version|Module Version|
+|--------------|---------------|--------------|
+| > v5.0.0     | > v10.3       | v1.1.0       |
+| >= v4.1.0    | > v10.0       | v1.0.0       |
