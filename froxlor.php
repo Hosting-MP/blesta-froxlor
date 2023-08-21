@@ -594,7 +594,7 @@ class Froxlor extends Module
             // Show the subdomain fields when we are adding a service, but not when managing a pending service
             $show_subdomains = (isset($vars->froxlor_domain) && isset($vars->froxlor_sub_domain)) || !isset($vars->froxlor_domain);
 
-            if ($package->meta->sub_domains ?? null) == 'enable' && $show_subdomains) {
+            if (($package->meta->sub_domains ?? null) == 'enable' && $show_subdomains) {
                 $domains = $this->getPackageAvailableDomains($package);
 
                 // Create sub_domain label
@@ -2023,10 +2023,10 @@ class Froxlor extends Module
             $hostname = 'hardcoded error msg';
         }
 
-        if($response->getLastStatusCode() != 200)){
+        if($response->getLastStatusCode() != 200){
             // Set internal error on no response
             // Only some API requests return status message, so only use it if its available
-            if (empty($response['message']) {
+            if (empty($response['message'])) {
                 $this->Input->setErrors(['api' => ['internal' => Language::_('Froxlor.!error.api.internal', true)]]);
             } else {
                 $this->Input->setErrors(['api' => ['internal' => $response['message']]]);

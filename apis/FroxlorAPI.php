@@ -65,19 +65,4 @@ class FroxlorAPI
         return $this->lastStatusCode;
     }
 
-    /**
-	 * returns last response data
-	 *
-	 * @return array
-	 */
-	public function getLastResponse(): array
-	{
-		if ($this->lastStatusCode != 200) {
-			// nothing is returned when the last call
-			// was not successful
-			return [];
-		}
-		return $this->last_body;
-	}
-
 }
