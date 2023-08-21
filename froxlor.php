@@ -1086,11 +1086,11 @@ class Froxlor extends Module
             if (($package->meta->account_type ?? 'customer') == 'customer') {
                 $this->log($row->meta->host_name . '|Customers.add', serialize($masked_params), 'input', true);
                 unset($masked_params);
-                if(!($new_account = $this->parseResponse($api->request('Customers.add', $params)))){ return; }
+                if(!($new_account = $this->parseResponse($api->request('Customers.add', $params), $api->getLastStatusCode()))){ return; }
             } else {
                 $this->log($row->meta->host_name . '|Admins.add', serialize($masked_params), 'input', true);
                 unset($masked_params);
-               if(!($new_account = $this->parseResponse($api->request('Admins.add', $params)))){ return; }
+               if(!($new_account = $this->parseResponse($api->request('Admins.add', $params), $api->getLastStatusCode()))){ return; }
             }
 
             if ($this->Input->errors()) {
@@ -1101,9 +1101,10 @@ class Froxlor extends Module
             if (($package->meta->account_type ?? 'customer') == 'customer') {
                 $params = [
                     'domain' => $this->getDomainNameFromData($package, $vars),
-                    'customerid' => $new_account->customerid
+                    'customerid' => $new_account['customerid']
                 ];
-                $this->parseResponse($api->request('Domains.add', $params));
+                $this->log($row->meta->host_name . '|Domains.add', serialize($params), 'input', true);
+                $this->parseResponse($api->request('Domains.add', $params), $api->getLastStatusCode());
 
                 if ($this->Input->errors()) {
                     return;
@@ -1236,7 +1237,7 @@ class Froxlor extends Module
                         true
                     );
                 }
-                if(!$this->parseResponse($api->request('Customers.update', $params))){ return; }
+                if(!$this->parseResponse($api->request('Customers.update', $params), $api->getLastStatusCode())){ return; }
 
                 // Update domain too if changed
                 if (isset($delta['froxlor_domain'])) {
@@ -1244,13 +1245,15 @@ class Froxlor extends Module
                     $params_oldDomain = [
                         'domainname' => $service_fields->froxlor_domain
                     ];
-                    if(!$this->parseResponse($api->request('Domains.delete', $params_oldDomain))){ return; }
+                    $this->log($row->meta->host_name . '|Domains.delete', serialize($params_oldDomain), 'input', true);
+                    if(!$this->parseResponse($api->request('Domains.delete', $params_oldDomain), $api->getLastStatusCode())){ return; }
                     // Get new domain to create
                     $params_newDomain = [
                         'loginname' => $service_fields->froxlor_username,
                         'domain' => $this->formatDomain(($delta['froxlor_domain'] ?? null))
                     ];
-                    if(!$this->parseResponse($api->request('Domains.add', $params_newDomain))){ return; }
+                    $this->log($row->meta->host_name . '|Domains.add', serialize($params_newDomain), 'input', true);
+                    if(!$this->parseResponse($api->request('Domains.add', $params_newDomain), $api->getLastStatusCode())){ return; }
                     $fields_changed[] = 'froxlor_domain';
                 }
 
@@ -1261,14 +1264,9 @@ class Froxlor extends Module
                     $fields_changed[] = 'froxlor_password';
                     $this->log($row->meta->host_name . '|Admins.update', '***', 'input', true);
                 } else {
-                    $this->log(
-                        $row->meta->host_name . '|Admins.update',
-                        serialize($params),
-                        'input',
-                        true
-                    );
+                    $this->log($row->meta->host_name . '|Admins.update', serialize($params), 'input', true);
                 }
-                if(!$this->parseResponse($api->request('Admins.update', $params))){ return; }
+                if(!$this->parseResponse($api->request('Admins.update', $params), $api->getLastStatusCode())){ return; }
             }
         }
 
@@ -1326,7 +1324,7 @@ class Froxlor extends Module
                     'input',
                     true
                 );
-                $this->parseResponse($api->request('Customers.update', $params));
+                $this->parseResponse($api->request('Customers.update', $params), $api->getLastStatusCode());
             } else {
                 $this->log(
                     $row->meta->host_name . '|Admins.update',
@@ -1334,7 +1332,7 @@ class Froxlor extends Module
                     'input',
                     true
                 );
-                $this->parseResponse($api->request('Admins.update', $params));
+                $this->parseResponse($api->request('Admins.update', $params), $api->getLastStatusCode());
             }
         }
 
@@ -1378,7 +1376,7 @@ class Froxlor extends Module
                     'input',
                     true
                 );
-                $this->parseResponse($api->request('Customers.update', $params));
+                $this->parseResponse($api->request('Customers.update', $params), $api->getLastStatusCode());
             } else {
                 $this->log(
                     $row->meta->host_name . '|Admins.update',
@@ -1386,7 +1384,7 @@ class Froxlor extends Module
                     'input',
                     true
                 );
-                $this->parseResponse($api->request('Admins.update', $params));
+                $this->parseResponse($api->request('Admins.update', $params), $api->getLastStatusCode());
             }
         }
 
@@ -1436,7 +1434,7 @@ class Froxlor extends Module
                     'input',
                     true
                 );
-                $this->parseResponse($api->request('Customers.delete', $params));
+                $this->parseResponse($api->request('Customers.delete', $params), $api->getLastStatusCode());
             } else {
                 $params = [
                     'loginname' => $service_fields->froxlor_username
@@ -1447,7 +1445,7 @@ class Froxlor extends Module
                     'input',
                     true
                 );
-                $this->parseResponse($api->request('Admins.delete', $params));
+                $this->parseResponse($api->request('Admins.delete', $params), $api->getLastStatusCode());
             }
         }
 
@@ -1582,9 +1580,11 @@ class Froxlor extends Module
 
         // Get client information
         if (($package->meta->account_type ?? 'customer') == 'customer') {
-            $stats = $this->parseResponse($api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]));
+            $this->log($row->meta->host_name . '|Customers.get', serialize(['loginname' => $service_fields->froxlor_username]), 'input', true);
+            $stats = $this->parseResponse($api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]), $api->getLastStatusCode());
         } else {
-            $stats = $this->parseResponse($api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]));
+            $this->log($row->meta->host_name . '|Admins.get', serialize(['loginname' => $service_fields->froxlor_username]), 'input', true);
+            $stats = $this->parseResponse($api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]), $api->getLastStatusCode());
         }
 
         $this->view->set('stats', $stats);
@@ -1626,9 +1626,11 @@ class Froxlor extends Module
 
         // Get client information
         if (($package->meta->account_type ?? 'customer') == 'customer') {
-            $stats = $this->parseResponse($api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]));
+            $this->log($row->meta->host_name . '|Customers.get', serialize(['loginname' => $service_fields->froxlor_username]), 'input', true);
+            $stats = $this->parseResponse($api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]), $api->getLastStatusCode());
         } else {
-            $stats = $this->parseResponse($api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]));
+            $this->log($row->meta->host_name . '|Admins.get', serialize(['loginname' => $service_fields->froxlor_username]), 'input', true);
+            $stats = $this->parseResponse($api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]), $api->getLastStatusCode());
         }
 
         $this->view->set('stats', $stats);
@@ -1691,7 +1693,8 @@ class Froxlor extends Module
         $accounts = null;
 
         try {
-            $output = $this->parseResponse($api->request('Customers.listing'));
+            $this->log('non-module-row-function|Customers.listing', serialize(""), 'input', true);
+            $output = $this->parseResponse($api->request('Customers.listing'), $api->getLastStatusCode());
 
             if (isset($output['count'])) {
                 $accounts = $output['count'];
@@ -1751,7 +1754,8 @@ class Froxlor extends Module
             );
 
             // Get customers listing count
-            $count = $this->parseResponse($api->request('Customers.listingCount'));
+            $this->log($host_name . '|Customers.listingCount', serialize(""), 'input', true);
+            $count = $this->parseResponse($api->request('Customers.listingCount'), $api->getLastStatusCode());
 
             if (is_numeric($count)) {
                 $account_count = $count;
@@ -1790,7 +1794,8 @@ class Froxlor extends Module
             $accountExists = false;
 
             try {
-                $output = $this->parseResponse($api->request('Customers.get', array("loginname", $accountName)));
+                $this->log($module_row->meta->host_name . '|Customers.get', serialize(['loginname' => $accountName]), 'input', true);
+                $output = $this->parseResponse($api->request('Customers.get', ['loginname' => $accountName]), $api->getLastStatusCode());
 
                 $accountExists = isset($output['id']) ? true : false;
 
@@ -1936,8 +1941,8 @@ class Froxlor extends Module
 
         try {
             $this->log($module_row->meta->host_name . '|Froxlor.generatePassword', serialize($module_row->meta->host_name), 'input', true);
-            $password = $this->parseResponse($api->request('Froxlor.generatePassword'));
-            $this->log($module_row->meta->host_name . '|Froxlor.generatePassword', serialize($password), 'output', !empty($password));
+            $password = $this->parseResponse($api->request('Froxlor.generatePassword'), $api->getLastStatusCode());
+            //$this->log($module_row->meta->host_name . '|Froxlor.generatePassword', serialize($password), 'output', !empty($password));
         } catch (Exception $e) {
             // API request failed
         }
@@ -2014,16 +2019,16 @@ class Froxlor extends Module
      * @param string $response The response from the API
      * @return stdClass A stdClass object representing the response, void if the response was an error
      */
-    private function parseResponse($response)
+    private function parseResponse($response, $status)
     {
         // Get module row
         if($row = $this->getModuleRow()){
             $hostname = $row->meta->host_name;
         } else {
-            $hostname = 'hardcoded error msg';
+            $hostname = 'could not get hostname (must not mean error)';
         }
 
-        if($response->getLastStatusCode() != 200){
+        if($status != 200){
             // Set internal error on no response
             // Only some API requests return status message, so only use it if its available
             if (empty($response['message'])) {
@@ -2082,7 +2087,7 @@ class Froxlor extends Module
 
         try {
             $this->log($module_row->meta->host_name . '|HostingPlans.listing', null, 'input', true);
-            $this->parseResponse($api->request('HostingPlans.listing'));
+            $response = $this->parseResponse($api->request('HostingPlans.listing'), $api->getLastStatusCode());
 
             foreach ($response['list'] as $package) {
                 $packages[$package['id']] = $package['name'];
@@ -2133,8 +2138,8 @@ class Froxlor extends Module
                 ],
                 'valid'=>[
                     // allow domain.com AND sub.domain.com AND (sub.)domain.com/folder
-                    //'rule'=>["matches", "/^([a-z0-9]|[a-z0-9][a-z0-9\-]{0,61}[a-z0-9])(\.([a-z0-9]|[a-z0-9][a-z0-9\-]{0,61}[a-z0-9]))+(\/[a-zA-Z0-9]+)?$/i"],
-					'rule'=>[[$this, 'validateHostName']],
+                    'rule'=>["matches", "/^([a-z0-9]|[a-z0-9][a-z0-9\-]{0,61}[a-z0-9])(\.([a-z0-9]|[a-z0-9][a-z0-9\-]{0,61}[a-z0-9]))+(\/[a-zA-Z0-9]+)?$/i"],
+                    //'rule'=>[[$this, 'validateHostName']],
                     'message'=>Language::_('Froxlor.!error.host_name_valid', true)
                 ]
             ],

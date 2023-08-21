@@ -64,5 +64,4 @@ class FroxlorAPI
     {
         return $this->lastStatusCode;
     }
-
 }
