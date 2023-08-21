@@ -1582,12 +1582,10 @@ class Froxlor extends Module
 
         // Get client information
         if (($package->meta->account_type ?? 'customer') == 'customer') {
-            $api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]);
+            $stats = $this->parseResponse($api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]));
         } else {
-            $api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]);
+            $stats = $this->parseResponse($api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]));
         }
-
-        $stats = $api->getLastResponse();
 
         $this->view->set('stats', $stats);
 
@@ -1628,11 +1626,10 @@ class Froxlor extends Module
 
         // Get client information
         if (($package->meta->account_type ?? 'customer') == 'customer') {
-            $api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]);
+            $stats = $this->parseResponse($api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]));
         } else {
-            $api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]);
+            $stats = $this->parseResponse($api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]));
         }
-        $stats = $api->getLastResponse();
 
         $this->view->set('stats', $stats);
 
@@ -1694,8 +1691,7 @@ class Froxlor extends Module
         $accounts = null;
 
         try {
-            $api->request('Customers.listing');
-            $output = $api->getLastResponse();
+            $output = $this->parseResponse($api->request('Customers.listing'));
 
             if (isset($output['count'])) {
                 $accounts = $output['count'];
@@ -1755,8 +1751,7 @@ class Froxlor extends Module
             );
 
             // Get customers listing count
-            $api->request('Customers.listingCount');
-            $count = $api->getLastResponse();
+            $count = $this->parseResponse($api->request('Customers.listingCount'));
 
             if (is_numeric($count)) {
                 $account_count = $count;
@@ -1795,8 +1790,7 @@ class Froxlor extends Module
             $accountExists = false;
 
             try {
-                $api->request('Customers.get', array("loginname", $accountName));
-                $output = $api->getLastResponse();
+                $output = $this->parseResponse($api->request('Customers.get', array("loginname", $accountName)));
 
                 $accountExists = isset($output['id']) ? true : false;
 
@@ -1942,8 +1936,7 @@ class Froxlor extends Module
 
         try {
             $this->log($module_row->meta->host_name . '|Froxlor.generatePassword', serialize($module_row->meta->host_name), 'input', true);
-            $api->request('Froxlor.generatePassword');
-            $password = $api->getLastResponse();
+            $password = $this->parseResponse($api->request('Froxlor.generatePassword'));
             $this->log($module_row->meta->host_name . '|Froxlor.generatePassword', serialize($password), 'output', !empty($password));
         } catch (Exception $e) {
             // API request failed
@@ -2024,32 +2017,30 @@ class Froxlor extends Module
     private function parseResponse($response)
     {
         // Get module row
-        $row = $this->getModuleRow();
-
-        $result = (object) $response->getLastResponse();
-        $success = true;
-
-        // Set internal error
-        if (!$result) {
-            $this->Input->setErrors(['api' => ['internal' => Language::_('Froxlor.!error.api.internal', true)]]);
-            $success = false;
+        if($row = $this->getModuleRow()){
+            $hostname = $row->meta->host_name;
+        } else {
+            $hostname = 'hardcoded error msg';
         }
 
-        // Only some API requests return status, so only use it if its available
-        if (!empty($response->getLastError())) {
-            $this->Input->setErrors(['api' => ['internal' => $response->getLastError()]]);
-            $success = false;
-        }
+        if($response->getLastStatusCode() != 200)){
+            // Set internal error on no response
+            // Only some API requests return status message, so only use it if its available
+            if (empty($response['message']) {
+                $this->Input->setErrors(['api' => ['internal' => Language::_('Froxlor.!error.api.internal', true)]]);
+            } else {
+                $this->Input->setErrors(['api' => ['internal' => $response['message']]]);
+            }
 
-        // Log the response
-        $this->log($row->meta->host_name, serialize($response), 'output', $success);
-
-        // Return if any errors encountered
-        if (!$success) {
+            // Log the response
+            $this->log($hostname, serialize($response), 'output', false);
             return;
+        } else {
+            // Log the response
+            $this->log($hostname, serialize($response), 'output', true);
+            return $response['data'];
         }
 
-        return $result;
     }
 
     /**
@@ -2091,9 +2082,7 @@ class Froxlor extends Module
 
         try {
             $this->log($module_row->meta->host_name . '|HostingPlans.listing', null, 'input', true);
-            $api->request('HostingPlans.listing');
-            $response = $api->getLastResponse();
-            $this->log($module_row->meta->host_name . '|HostingPlans.listing', serialize($response), 'output', !empty($response));
+            $this->parseResponse($api->request('HostingPlans.listing'));
 
             foreach ($response['list'] as $package) {
                 $packages[$package['id']] = $package['name'];
