@@ -28,17 +28,17 @@
             for ($i=0; $i<$num_rows; $i++) {
             ?>
             <tr<?php echo ($i%2 == 1) ? ' class="odd_row"' : '';?>>
-                <td><?php $this->Html->_($module->rows[$i]->meta->server_name);?></td>
-                <td><?php $this->Html->_($module->rows[$i]->meta->host_name);?></td>
-                <td><?php $this->_('Froxlor.manage.module_rows.count', false, $this->Html->ifSet($module->rows[$i]->meta->account_count, 0), ($this->Html->ifSet($module->rows[$i]->meta->account_limit) == '' ? '∞' : $module->rows[$i]->meta->account_limit));?></td>
+                <td><?php echo (isset($module->rows[$i]->meta->server_name) ? $this->Html->safe($module->rows[$i]->meta->server_name) : null);?></td>
+                <td><?php echo (isset($module->rows[$i]->meta->host_name) ? $this->Html->safe($module->rows[$i]->meta->host_name) : null);?></td>
+                <td><?php $this->_('Froxlor.manage.module_rows.count', false, ($module->rows[$i]->meta->account_count ?? 0), ($module->rows[$i]->meta->account_limit ?? null) == '' ? '∞' : $module->rows[$i]->meta->account_limit));?></td>
                 <td>
-                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/editrow/' . $this->Html->ifSet($module->id) . '/' . $this->Html->ifSet($module->rows[$i]->id) . '/');?>"><?php $this->_('Froxlor.manage.module_rows.edit');?></a>
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/editrow/' . ($module->id ?? null) . '/' . ($module->rows[$i]->id ?? null) . '/');?>"><?php $this->_('Froxlor.manage.module_rows.edit');?></a>
                     <?php
                     $this->Form->create($this->base_uri . 'settings/company/modules/deleterow/');
-                    $this->Form->fieldHidden('id', $this->Html->ifSet($module->id));
-                    $this->Form->fieldHidden('row_id', $this->Html->ifSet($module->rows[$i]->id));
+                    $this->Form->fieldHidden('id', ($module->id ?? null));
+                    $this->Form->fieldHidden('row_id', ($module->rows[$i]->id ?? null));
                     ?>
-                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/deleterow/' . $this->Html->ifSet($module->id) . '/' . $this->Html->ifSet($module->rows[$i]->id) . '/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('Froxlor.manage.module_rows.confirm_delete', true));?>"><?php $this->_('Froxlor.manage.module_rows.delete');?></a>
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/deleterow/' . ($module->id ?? null) . '/' . ($module->rows[$i]->id ?? null) . '/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('Froxlor.manage.module_rows.confirm_delete', true));?>"><?php $this->_('Froxlor.manage.module_rows.delete');?></a>
                     <?php
                     $this->Form->end();
                     ?>
@@ -81,23 +81,23 @@
                 $row_count = 0;
                 $row_total = 0;
                 foreach($rows as $row) {
-                    $row_count += (int) $this->Html->ifSet($row->meta->account_count, 0);
-                    $total = ($this->Html->ifSet($row->meta->account_limit) == '' ? null : (int) $row->meta->account_limit);
+                    $row_count += (int) ($row->meta->account_count ?? 0);
+                    $total = (($row->meta->account_limit ?? null) == '' ? null : (int) $row->meta->account_limit);
                     $row_total = ($row_total === '∞' || $total === null ? '∞' : ($row_total + $total));
                 }
             ?>
             <tr<?php echo ($i%2 == 1) ? ' class="odd_row"' : '';?>>
-                <td><?php $this->Html->_($module->groups[$i]->name);?></td>
+                <td><?php echo (isset($module->groups[$i]->name) ? $this->Html->safe($module->groups[$i]->name) : null);?></td>
                 <td><?php echo count($rows);?></td>
                 <td><?php $this->_('Froxlor.manage.module_rows.count', false, $row_count, $row_total);?></td>
                 <td>
-                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/editgroup/' . $this->Html->ifSet($module->id) . '/' . $this->Html->ifSet($module->groups[$i]->id) . '/');?>"><?php $this->_('Froxlor.manage.module_groups.edit');?></a>
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/editgroup/' . ($module->id ?? null) . '/' . ($module->groups[$i]->id ?? null) . '/');?>"><?php $this->_('Froxlor.manage.module_groups.edit');?></a>
                     <?php
                     $this->Form->create($this->base_uri . 'settings/company/modules/deletegroup/');
-                    $this->Form->fieldHidden('id', $this->Html->ifSet($module->id));
-                    $this->Form->fieldHidden('group_id', $this->Html->ifSet($module->groups[$i]->id));
+                    $this->Form->fieldHidden('id', ($module->id ?? null));
+                    $this->Form->fieldHidden('group_id', ($module->groups[$i]->id ?? null));
                     ?>
-                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/deletegroup/' . $this->Html->ifSet($module->id) . '/' . $this->Html->ifSet($module->groups[$i]->id) . '/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('Froxlor.manage.module_groups.confirm_delete', true));?>"><?php $this->_('Froxlor.manage.module_groups.delete');?></a>
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/modules/deletegroup/' . ($module->id ?? null) . '/' . ($module->groups[$i]->id ?? null) . '/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('Froxlor.manage.module_groups.confirm_delete', true));?>"><?php $this->_('Froxlor.manage.module_groups.delete');?></a>
                     <?php
                     $this->Form->end();
                     ?>

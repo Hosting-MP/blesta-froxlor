@@ -143,7 +143,7 @@ class Froxlor extends Module
             $fields->fieldSelect(
                 'meta[account_type]',
                 $account_types,
-				(isset($vars->meta['account_type']) ? $vars->meta['account_type'] : null),
+				($vars->meta['account_type'] ?? null),
                 ['id' => 'froxlor_account_type']
             )
         );
@@ -184,7 +184,7 @@ class Froxlor extends Module
             $fields->fieldSelect(
                 'meta[package]',
                 $packages,
-                (isset($vars->meta['package']) ? $vars->meta['package'] : null),
+                ($vars->meta['package'] ?? null),
                 ['id' => 'froxlor_package']
             )
         );
@@ -209,7 +209,7 @@ class Froxlor extends Module
             $limit_field->attach(
                 $fields->fieldText(
                     'meta[' . $admin_field . ']',
-					(isset($vars->meta[$admin_field]) ? $vars->meta[$admin_field] : null),
+					($vars->meta[$admin_field] ?? null),
                     ['id' => 'froxlor_admin_limit_' . $admin_field]
                 )
             );
@@ -233,7 +233,7 @@ class Froxlor extends Module
             $fields->fieldRadio(
                 'meta[sub_domains]',
                 'enable',
-                (isset($vars->meta['sub_domains']) ? $vars->meta['sub_domains'] : null) == 'enable',
+                ($vars->meta['sub_domains'] ?? null) == 'enable',
                 ['id' => 'froxlor_sub_domains_enable'],
                 $sub_domains_enable
             )
@@ -242,7 +242,7 @@ class Froxlor extends Module
             $fields->fieldRadio(
                 'meta[sub_domains]',
                 'disable',
-                (isset($vars->meta['sub_domains']) ? $vars->meta['sub_domains'] : 'disable') == 'disable',
+                ($vars->meta['sub_domains'] ?? 'disable') == 'disable',
                 ['id' => 'froxlor_sub_domains_disable'],
                 $sub_domains_disable
             )
@@ -257,7 +257,7 @@ class Froxlor extends Module
         $domains_list->attach(
             $fields->fieldText(
                 'meta[domains_list]',
-                (isset($vars->meta['domains_list']) ? $vars->meta['domains_list'] : null),
+                ($vars->meta['domains_list'] ?? null),
                 ['id' => 'froxlor_domains_list']
             )
         );
@@ -282,7 +282,7 @@ class Froxlor extends Module
             $fields->fieldRadio(
                 'meta[api_allowed]',
                 'enable',
-                (isset($vars->meta['api_allowed']) ? $vars->meta['api_allowed'] : null) == 'enable',
+                ($vars->meta['api_allowed'] ?? null) == 'enable',
                 ['id' => 'froxlor_api_allowed_enable'],
                 $api_allowed_enable
             )
@@ -291,7 +291,7 @@ class Froxlor extends Module
             $fields->fieldRadio(
                 'meta[api_allowed]',
                 'disable',
-                (isset($vars->meta['api_allowed']) ? $vars->meta['api_allowed'] : 'disable') == 'disable',
+                ($vars->meta['api_allowed'] ?? 'disable') == 'disable',
                 ['id' => 'froxlor_api_allowed_disable'],
                 $api_allowed_disable
             )
@@ -590,11 +590,11 @@ class Froxlor extends Module
 
         $fields = new ModuleFields();
 
-        if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+        if (($package->meta->account_type ?? 'customer') == 'customer') {
             // Show the subdomain fields when we are adding a service, but not when managing a pending service
             $show_subdomains = (isset($vars->froxlor_domain) && isset($vars->froxlor_sub_domain)) || !isset($vars->froxlor_domain);
 
-            if ((isset($package->meta->sub_domains) ? $package->meta->sub_domains : null) == 'enable' && $show_subdomains) {
+            if ($package->meta->sub_domains ?? null) == 'enable' && $show_subdomains) {
                 $domains = $this->getPackageAvailableDomains($package);
 
                 // Create sub_domain label
@@ -603,7 +603,7 @@ class Froxlor extends Module
                 $sub_domain->attach(
                     $fields->fieldText(
                         'froxlor_sub_domain',
-                        (isset($vars->froxlor_sub_domain) ? $vars->froxlor_sub_domain : null),
+                        ($vars->froxlor_sub_domain ?? null),
                         ['id' => 'froxlor_sub_domain']
                     )
                 );
@@ -617,7 +617,7 @@ class Froxlor extends Module
                     $fields->fieldSelect(
                         'froxlor_domain',
                         $domains,
-                        (isset($vars->froxlor_domain) ? $vars->froxlor_domain : null),
+                        ($vars->froxlor_domain ?? null),
                         ['id' => 'froxlor_domain']
                     )
                 );
@@ -630,7 +630,7 @@ class Froxlor extends Module
                 $domain->attach(
                     $fields->fieldText(
                         'froxlor_domain',
-                        (isset($vars->froxlor_domain) ? $vars->froxlor_domain : null),
+                        ($vars->froxlor_domain ?? null),
                         ['id' => 'froxlor_domain']
                     )
                 );
@@ -643,7 +643,7 @@ class Froxlor extends Module
         $username = $fields->label(Language::_('Froxlor.service_field.username', true), 'froxlor_username');
         // Create username field and attach to username label
         $username->attach(
-            $fields->fieldText('froxlor_username', (isset($vars->froxlor_username) ? $vars->froxlor_username : null), ['id'=>'froxlor_username'])
+            $fields->fieldText('froxlor_username', ($vars->froxlor_username ?? null), ['id'=>'froxlor_username'])
         );
         // Add tooltip
         $tooltip = $fields->tooltip(Language::_('Froxlor.service_field.tooltip.username', true));
@@ -657,11 +657,11 @@ class Froxlor extends Module
         $password->attach(
             $fields->fieldPassword(
                 'froxlor_password',
-                ['id' => 'froxlor_password', 'value' => (isset($vars->froxlor_password) ? $vars->froxlor_password : null)]
+                ['id' => 'froxlor_password', 'value' => ($vars->froxlor_password ?? null)]
             )
         );
         // Add tooltip
-        $tooltip = $fields->tooltip(Language::_('Froxlor.service_field.tooltip.password', true));
+        $tooltip = $fields->tooltip(Language::_('Froxlor.service_field.tooltip.password', true), ['class' => 'd-inline']);
         $password->attach($tooltip);
         // Set the label as a field
         $fields->setField($password);
@@ -672,7 +672,7 @@ class Froxlor extends Module
         $textnotice->attach(
             $fields->fieldTextarea(
                 'froxlor_textnotice',
-                (isset($vars->froxlor_textnotice) ? $vars->froxlor_textnotice : null),
+                ($vars->froxlor_textnotice ?? null),
                 ['id' => 'froxlor_textnotice']
             )
         );
@@ -696,8 +696,8 @@ class Froxlor extends Module
 
         $fields = new ModuleFields();
 
-        if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
-            if ((isset($package->meta->sub_domains) ? $package->meta->sub_domains : null) == 'enable') {
+        if (($package->meta->account_type ?? 'customer') == 'customer') {
+            if (($package->meta->sub_domains ?? null) == 'enable') {
                 $domains = $this->getPackageAvailableDomains($package);
 
                 // Create sub_domain label
@@ -706,7 +706,7 @@ class Froxlor extends Module
                 $sub_domain->attach(
                     $fields->fieldText(
                         'froxlor_sub_domain',
-                        (isset($vars->froxlor_sub_domain) ? $vars->froxlor_sub_domain : null),
+                        ($vars->froxlor_sub_domain ?? null),
                         ['id' => 'froxlor_sub_domain']
                     )
                 );
@@ -720,7 +720,7 @@ class Froxlor extends Module
                     $fields->fieldSelect(
                         'froxlor_domain',
                         $domains,
-                        (isset($vars->froxlor_domain) ? $vars->froxlor_domain : null),
+                        ($vars->froxlor_domain ?? null),
                         ['id' => 'froxlor_domain']
                     )
                 );
@@ -733,7 +733,7 @@ class Froxlor extends Module
                 $domain->attach(
                     $fields->fieldText(
                         'froxlor_domain',
-                        (isset($vars->froxlor_domain) ? $vars->froxlor_domain : ($vars->domain ?? null)),
+                        ($vars->froxlor_domain ?? $vars->domain ?? null),
                         ['id' => 'froxlor_domain']
                     )
                 );
@@ -759,12 +759,12 @@ class Froxlor extends Module
 
         $fields = new ModuleFields();
 
-        if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+        if (($package->meta->account_type ?? 'customer') == 'customer') {
             // Create domain label
             $domain = $fields->label(Language::_('Froxlor.service_field.domain', true), 'froxlor_domain');
             // Create domain field and attach to domain label
             $domain->attach(
-                $fields->fieldText('froxlor_domain', (isset($vars->froxlor_domain) ? $vars->froxlor_domain : null), ['id'=>'froxlor_domain'])
+                $fields->fieldText('froxlor_domain', ($vars->froxlor_domain ?? null), ['id'=>'froxlor_domain'])
             );
             $domain_tooltip = $fields->tooltip(Language::_('Froxlor.service_field.tooltip.domain', true));
             $domain->attach($domain_tooltip);
@@ -776,7 +776,7 @@ class Froxlor extends Module
         $username = $fields->label(Language::_('Froxlor.service_field.username', true), 'froxlor_username');
         // Create username field and attach to username label
         $username->attach(
-            $fields->fieldText('froxlor_username', (isset($vars->froxlor_username) ? $vars->froxlor_username : null), ['id'=>'froxlor_username','disabled'=>'disabled'])
+            $fields->fieldText('froxlor_username', ($vars->froxlor_username ?? null), ['id'=>'froxlor_username','disabled'=>'disabled'])
         );
         // Set the label as a field
         $fields->setField($username);
@@ -787,7 +787,7 @@ class Froxlor extends Module
         $password->attach(
             $fields->fieldPassword(
                 'froxlor_password',
-                ['id' => 'froxlor_password', 'value' => (isset($vars->froxlor_password) ? $vars->froxlor_password : null)]
+                ['id' => 'froxlor_password', 'value' => ($vars->froxlor_password ?? null)]
             )
         );
         // Set the label as a field
@@ -799,7 +799,7 @@ class Froxlor extends Module
         $textnotice->attach(
             $fields->fieldTextarea(
                 'froxlor_textnotice',
-                (isset($vars->froxlor_textnotice) ? $vars->froxlor_textnotice : null),
+                ($vars->froxlor_textnotice ?? null),
                 ['id' => 'froxlor_textnotice']
             )
         );
@@ -908,7 +908,7 @@ class Froxlor extends Module
             'froxlor_confirm_password' => [
                 'matches' => [
                     'if_set' => true,
-                    'rule' => ['compares', '==', (isset($vars['froxlor_password']) ? $vars['froxlor_password'] : '')],
+                    'rule' => ['compares', '==', ($vars['froxlor_password'] ?? '')],
                     'message' => Language::_('Froxlor.!error.froxlor_password.matches', true)
                 ]
             ]
@@ -975,8 +975,8 @@ class Froxlor extends Module
     {
         Loader::loadHelpers($this, ['Html']);
 
-        $name = $this->formatDomain((isset($vars['froxlor_domain']) ? $vars['froxlor_domain'] : null));
-        if (((isset($package->meta->sub_domains) ? $package->meta->sub_domains : null) == 'enable') && (isset($vars['froxlor_sub_domain']) ? $vars['froxlor_sub_domain'] : null))
+        $name = $this->formatDomain(($vars['froxlor_domain'] ?? null));
+        if ((($package->meta->sub_domains ?? null) == 'enable') && ($vars['froxlor_sub_domain'] ?? null))
         {
             $name = $this->formatDomain($vars['froxlor_sub_domain'] . '.' . $vars['froxlor_domain']);
         }
@@ -1027,7 +1027,7 @@ class Froxlor extends Module
         $api = $this->getApi($row->meta->host_name, $row->meta->api_key, $row->meta->api_secret, $row->meta->use_ssl);
 
         // Generate username/password
-        if (array_key_exists('froxlor_domain', $vars) || ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'admin')) {
+        if (array_key_exists('froxlor_domain', $vars) || (($package->meta->account_type ?? 'customer') == 'admin')) {
             // Load helpders to get the client info from Blesta
             Loader::loadModels($this, ['Clients', 'Contacts']);
 
@@ -1038,7 +1038,7 @@ class Froxlor extends Module
 
             // Generate a username
             if (empty($vars['froxlor_username'])) {
-                if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+                if (($package->meta->account_type ?? 'customer') == 'customer') {
                     $vars['froxlor_username'] = $this->generateUsername();
                 } else {
                     $vars['froxlor_username'] = $this->generateUsername(true);
@@ -1083,7 +1083,7 @@ class Froxlor extends Module
             $masked_params = $params;
             $masked_params['new_customer_password'] = '***';
 
-            if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+            if (($package->meta->account_type ?? 'customer') == 'customer') {
                 $this->log($row->meta->host_name . '|Customers.add', serialize($masked_params), 'input', true);
                 unset($masked_params);
                 if(!($new_account = $this->parseResponse($api->request('Customers.add', $params)))){ return; }
@@ -1098,7 +1098,7 @@ class Froxlor extends Module
             }
 
             // Add domain to customer
-            if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+            if (($package->meta->account_type ?? 'customer') == 'customer') {
                 $params = [
                     'domain' => $this->getDomainNameFromData($package, $vars),
                     'customerid' => $new_account->customerid
@@ -1115,7 +1115,7 @@ class Froxlor extends Module
         }
 
         // Return service fields
-        if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+        if (($package->meta->account_type ?? 'customer') == 'customer') {
             return [
                 [
                     'key' => 'froxlor_domain',
@@ -1205,7 +1205,7 @@ class Froxlor extends Module
         if ($vars['use_module'] == 'true') {
             // Check for fields that changed
             foreach ($vars as $key => $value) {
-                if (!isset($service_fields->$key) || $vars[$key] != $service_fields->$key) {
+                if (!array_key_exists($key, (array) $service_fields) || $vars[$key] != $service_fields->$key) {
                     $delta[$key] = $value;
                 }
             }
@@ -1222,7 +1222,7 @@ class Froxlor extends Module
                 $fields_changed[] = 'froxlor_textnotice';
             }
 
-            if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+            if (($package->meta->account_type ?? 'customer') == 'customer') {
                 // Do not put password in log so obfuscate it here
                 if (isset($delta['froxlor_password'])) {
                     $params['new_customer_password'] = $delta['froxlor_password'];
@@ -1248,7 +1248,7 @@ class Froxlor extends Module
                     // Get new domain to create
                     $params_newDomain = [
                         'loginname' => $service_fields->froxlor_username,
-                        'domain' => $this->formatDomain((isset($delta['froxlor_domain']) ? $delta['froxlor_domain'] : null))
+                        'domain' => $this->formatDomain(($delta['froxlor_domain'] ?? null))
                     ];
                     if(!$this->parseResponse($api->request('Domains.add', $params_newDomain))){ return; }
                     $fields_changed[] = 'froxlor_domain';
@@ -1319,7 +1319,7 @@ class Froxlor extends Module
                 'deactivated' => 1
             ];
 
-            if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+            if (($package->meta->account_type ?? 'customer') == 'customer') {
                 $this->log(
                     $row->meta->host_name . '|Customers.update',
                     serialize($params),
@@ -1371,7 +1371,7 @@ class Froxlor extends Module
                 'deactivated' => 0
             ];
 
-            if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+            if (($package->meta->account_type ?? 'customer') == 'customer') {
                 $this->log(
                     $row->meta->host_name . '|Customers.update',
                     serialize($params),
@@ -1424,7 +1424,7 @@ class Froxlor extends Module
 
             $service_fields = $this->serviceFieldsToObject($service->fields);
 
-            if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+            if (($package->meta->account_type ?? 'customer') == 'customer') {
                 // Set the account name to delete and to erase all user data
                 $params = [
                     'loginname' => $service_fields->froxlor_username,
@@ -1581,7 +1581,7 @@ class Froxlor extends Module
         );
 
         // Get client information
-        if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+        if (($package->meta->account_type ?? 'customer') == 'customer') {
             $api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]);
         } else {
             $api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]);
@@ -1627,7 +1627,7 @@ class Froxlor extends Module
         );
 
         // Get client information
-        if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+        if (($package->meta->account_type ?? 'customer') == 'customer') {
             $api->request('Customers.get', ['loginname' => $service_fields->froxlor_username]);
         } else {
             $api->request('Admins.get', ['loginname' => $service_fields->froxlor_username]);
@@ -1663,8 +1663,8 @@ class Froxlor extends Module
         if (!empty($post)) {
             Loader::loadModels($this, ['Services']);
             $data = [
-                'froxlor_password' => (isset($post['froxlor_password']) ? $post['froxlor_password'] : null),
-                'froxlor_confirm_password' => (isset($post['froxlor_confirm_password']) ? $post['froxlor_confirm_password'] : null)
+                'froxlor_password' => ($post['froxlor_password'] ?? null),
+                'froxlor_confirm_password' => ($post['froxlor_confirm_password'] ?? null)
             ];
             $this->Services->edit($service->id, $data);
 
@@ -1677,7 +1677,7 @@ class Froxlor extends Module
 
         $this->view->set('service_fields', $service_fields);
         $this->view->set('service_id', $service->id);
-        $this->view->set('vars', (isset($vars) ? $vars : new stdClass()));
+        $this->view->set('vars', ($vars ?? new stdClass()));
 
         $this->view->setDefaultView('components' . DS . 'modules' . DS . 'froxlor' . DS);
         return $this->view->fetch();
@@ -1962,32 +1962,32 @@ class Froxlor extends Module
     private function getFieldsFromInput(array $vars, $package)
     {
 
-        if ((isset($package->meta->account_type) ? $package->meta->account_type : 'customer') == 'customer') {
+        if (($package->meta->account_type ?? 'customer') == 'customer') {
             $fields = [
-                'new_loginname' => isset($vars['froxlor_username']) ? $vars['froxlor_username']: null,
-                'new_customer_password' => isset($vars['froxlor_password']) ? $vars['froxlor_password'] : null,
+                'new_loginname' => $vars['froxlor_username'] ?? null,
+                'new_customer_password' => $vars['froxlor_password'] ?? null,
                 'api_allowed' => isset($package->meta->api_allowed) ? (($package->meta->api_allowed == 'enable') ? true : false) : null,
-                'firstname' => isset($vars['froxlor_first_name']) ? $vars['froxlor_first_name'] : null,
-                'name' => isset($vars['froxlor_last_name']) ? $vars['froxlor_last_name'] : null,
-                'company' => isset($vars['froxlor_company']) ? $vars['froxlor_company'] : 'NA',
-                'customernumber' => isset($vars['froxlor_customernumber']) ? $vars['froxlor_customernumber'] : null,
+                'firstname' => $vars['froxlor_first_name'] ?? null,
+                'name' => $vars['froxlor_last_name'] ?? null,
+                'company' => $vars['froxlor_company'] ?? 'NA',
+                'customernumber' => $vars['froxlor_customernumber'] ?? null,
                 'hosting_plan_id' => $package->meta->package,
-                'email' => isset($vars['froxlor_email']) ? $vars['froxlor_email'] : null,
-                'street' => isset($vars['froxlor_street']) ? $vars['froxlor_street'] : null,
-                'city' => isset($vars['froxlor_city']) ? $vars['froxlor_city'] : null,
-                'zipcode' => isset($vars['froxlor_zipcode']) ? $vars['froxlor_zipcode'] : null,
-                'phone' => isset($vars['froxlor_phone']) ? $vars['froxlor_phone'] : null,
-                'custom_notes' => isset($vars['froxlor_textnotice']) ? $vars['froxlor_textnotice'] : null,
+                'email' => $vars['froxlor_email'] ?? null,
+                'street' => $vars['froxlor_street'] ?? null,
+                'city' => $vars['froxlor_city'] ?? null,
+                'zipcode' => $vars['froxlor_zipcode'] ?? null,
+                'phone' => $vars['froxlor_phone'] ?? null,
+                'custom_notes' => $vars['froxlor_textnotice'] ?? null,
                 'custom_notes_show' => isset($vars['froxlor_textnotice']) ? (($vars['froxlor_textnotice'] !== '') ? true : false) : null
             ];
         } else {
 			$fields = [
                 'name' => (isset($vars['froxlor_first_name']) && isset($vars['froxlor_last_name'])) ? $vars['froxlor_first_name'] . ' ' . $vars['froxlor_last_name'] : null,
-                'email' => isset($vars['froxlor_email']) ? $vars['froxlor_email'] : null,
-                'new_loginname' => isset($vars['froxlor_username']) ? $vars['froxlor_username']: null,
-                'admin_password' => isset($vars['froxlor_password']) ? $vars['froxlor_password'] : null,
+                'email' => $vars['froxlor_email'] ?? null,
+                'new_loginname' => $vars['froxlor_username'] ?? null,
+                'admin_password' => $vars['froxlor_password'] ?? null,
                 'api_allowed' => isset($package->meta->api_allowed) ? (($package->meta->api_allowed == 'enable') ? true : false) : null,
-                'custom_notes' => isset($vars['froxlor_textnotice']) ? $vars['froxlor_textnotice'] : null,
+                'custom_notes' => $vars['froxlor_textnotice'] ?? null,
                 'custom_notes_show' => isset($vars['froxlor_textnotice']) ? (($vars['froxlor_textnotice'] !== '') ? true : false) : null
             ];
             // package options which can be unlimited (specified as -1 in blesta)
@@ -2004,7 +2004,7 @@ class Froxlor extends Module
                 'mysqls'
             ];
             foreach ($ul_list as $ul) {
-                if((isset($package->meta->$ul) ? $package->meta->$ul : null) == -1){
+                if(($package->meta->$ul ?? null) == -1){
                     $fields[$ul . '_ul'] = true;
                 } else {
                     $fields[$ul] = $package->meta->$ul;
@@ -2249,7 +2249,7 @@ class Froxlor extends Module
             ]
         ];
 
-        if ((isset($vars['meta']['account_type']) ? $vars['meta']['account_type'] : 'customer') == 'customer') {
+        if (($vars['meta']['account_type'] ?? 'customer') == 'customer') {
             $rules['meta[package]'] = [
                 'empty' => [
                     'rule' => 'isEmpty',

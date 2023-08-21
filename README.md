@@ -23,5 +23,6 @@ to a /components/modules/froxlor/ directory within your Blesta installation path
 
 |Blesta Version|Froxlor Version|Module Version|
 |--------------|---------------|--------------|
+| > v5.8.0     | > v2.0.21     | v2.0.0       |
 | > v5.0.0     | > v10.3       | v1.1.0       |
 | >= v4.1.0    | > v10.0       | v1.0.0       |
