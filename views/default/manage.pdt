@@ -14,7 +14,7 @@
             <h3><?php $this->_('Froxlor.manage.module_rows_title');?></h3>
         </div>
         <?php
-        $num_rows = count((isset($module->rows) ? $module->rows : []));
+        $num_rows = count(($module->rows ?? []));
         if ($num_rows > 0) {
         ?>
         <table class="table">
@@ -64,7 +64,7 @@
             <h3><?php $this->_('Froxlor.manage.module_groups_title');?></h3>
         </div>
         <?php
-        $num_rows = count((isset($module->groups) ? $module->groups : []));
+        $num_rows = count(($module->groups ?? []));
         if ($num_rows > 0) {
         ?>
         <table class="table">
@@ -77,7 +77,7 @@
             <?php
             for ($i=0; $i<$num_rows; $i++) {
                 // Determine the row count per group
-                $rows = (array) (isset($module->groups[$i]->rows) ? $module->groups[$i]->rows : []);
+                $rows = (array) ($module->groups[$i]->rows ?? []);
                 $row_count = 0;
                 $row_total = 0;
                 foreach($rows as $row) {

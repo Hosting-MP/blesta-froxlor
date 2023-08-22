@@ -6,7 +6,7 @@ use Blesta\Core\Util\Validate\Server;
  *
  * @package blesta
  * @subpackage blesta.components.modules.froxlor
- * @copyright Copyright (c) 2022, EDV Service Timo Stramann
+ * @copyright Copyright (c) 2023, EDV Service Timo Stramann
  * @link https://edvservicetimostramann.de/ Timo Stramann
  */
 class Froxlor extends Module

@@ -56,11 +56,11 @@ function formatBytes($bytes, $precision = 2) {
     <label><?php $this->_('Froxlor.tab_client_stats.disk_title');?></label>
     <?php
     $disk = [
-        'used' => round((isset($stats['diskspace_used']) ? $stats['diskspace_used'] : 0), 2),
-        'limit' => round((isset($stats['diskspace']) ? $stats['diskspace'] : 0), 2)
+        'used' => round(($stats['diskspace_used'] ?? 0), 2),
+        'limit' => round(($stats['diskspace'] ?? 0), 2)
     ];
     $unlimited = ($disk['limit'] == '∞');
-    $percent_used = ($unlimited ? 0 : round(((isset($disk['used']) ? $disk['used'] : 0)/(isset($disk['limit']) ? $disk['limit'] : 1))*100, 0));
+    $percent_used = ($unlimited ? 0 : round((($disk['used'] ?? 0)/($disk['limit'] ?? 1))*100, 0));
     ?>
     <small>
         <?php echo ($unlimited ? $this->_('Froxlor.tab_client_stats.usage_unlimited', true, $this->Html->safe($disk['used'])) : $this->_('Froxlor.tab_client_stats.usage', true, formatBytes(round($this->Html->safe($disk['used']))), formatBytes(round($this->Html->safe($disk['limit'])))));?>
@@ -74,11 +74,11 @@ function formatBytes($bytes, $precision = 2) {
     <label><?php $this->_('Froxlor.tab_client_stats.bandwidth_title');?></label>
     <?php
     $bandwidth = [
-        'used' => round((isset($stats['traffic_used']) ? $stats['traffic_used'] : 0), 2),
-        'limit' => round((isset($stats['traffic']) ? $stats['traffic'] : 0), 2)
+        'used' => round(($stats['traffic_used'] ?? 0), 2),
+        'limit' => round(($stats['traffic'] ?? 0), 2)
     ];
     $unlimited = ($bandwidth['limit'] == '∞');
-    $percent_used = ($unlimited ? 0 : round(((isset($bandwidth['used']) ? $bandwidth['used'] : 0)/(isset($bandwidth['limit']) ? $bandwidth['limit'] : 1))*100, 0));
+    $percent_used = ($unlimited ? 0 : round((($bandwidth['used'] ?? 0)/($bandwidth['limit'] ?? 1))*100, 0));
     ?>
     <small>
         <?php echo ($unlimited ? $this->_('Froxlor.tab_client_stats.usage_unlimited', true, formatBytes(round($this->Html->safe($bandwidth['used'])))) : $this->_('Froxlor.tab_client_stats.usage', true, formatBytes(round($this->Html->safe($bandwidth['used']))), formatBytes(round($this->Html->safe($bandwidth['limit'])))));?>

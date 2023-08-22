@@ -68,14 +68,14 @@ function formatBytes($bytes, $precision = 2) {
                 <tr>
                     <td>
                         <?php
-                        $usage = (isset($stats['traffic_used']) ? $stats['traffic_used'] : 0);
+                        $usage = ($stats['traffic_used'] ?? 0);
                         $this->_('Froxlor.tab_stats.bandwidth_value', false, round($usage, 2));
                         ?>
                     </td>
                     <td>
                         <?php
-                        $limit = (isset($stats['traffic']) ? $stats['traffic'] : 0);
-                        $this->_(((isset($stats['traffic']) ? $stats['traffic'] : null) == '∞' ? 'Froxlor.tab_stats.bandwidth_unlimited' : 'Froxlor.tab_stats.bandwidth_value'), false, formatBytes(round($limit)));
+                        $limit = ($stats['traffic'] ?? 0);
+                        $this->_((($stats['traffic'] ?? null) == '∞' ? 'Froxlor.tab_stats.bandwidth_unlimited' : 'Froxlor.tab_stats.bandwidth_value'), false, formatBytes(round($limit)));
                         ?>
                     </td>
                 </tr>
@@ -98,14 +98,14 @@ function formatBytes($bytes, $precision = 2) {
                 <tr>
                     <td>
                         <?php
-                        $usage = (isset($stats['diskspace_used']) ? $stats['diskspace_used'] : 0);
+                        $usage = ($stats['diskspace_used'] ?? 0);
                         $this->_('Froxlor.tab_stats.disk_value', false, round($usage, 2));
                         ?>
                     </td>
                     <td>
                         <?php
-                        $limit = (isset($stats['diskspace']) ? $stats['diskspace'] : 0);
-                        $this->_(((isset($stats['diskspace']) ? $stats['diskspace'] : null) == '∞' ? 'Froxlor.tab_stats.disk_unlimited' : 'Froxlor.tab_stats.disk_value'), false, formatBytes(round($limit)));
+                        $limit = ($stats['diskspace'] ?? 0);
+                        $this->_((($stats['diskspace'] ?? null) == '∞' ? 'Froxlor.tab_stats.disk_unlimited' : 'Froxlor.tab_stats.disk_value'), false, formatBytes(round($limit)));
                         ?>
                     </td>
                 </tr>
