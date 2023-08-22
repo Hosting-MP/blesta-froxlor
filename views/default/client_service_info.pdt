@@ -17,12 +17,11 @@
                     <td><?php echo (isset($module_row->meta->host_name) ? $this->Html->safe($module_row->meta->host_name) : null);?></td>
                     <td>
                         <?php
-                        $this->Form->create($this->Html->safe('http' . (isset($module_row->meta->use_ssl) && $module_row->meta->use_ssl == 'false' ? '' : 's') . '://' . ($module_row->meta->host_name ?? null) . '/index.php'), ['target' => '_blank']);
+                        $this->Form->create($this->Html->safe('http' . (isset($module_row->meta->use_ssl) && $module_row->meta->use_ssl == 'false' ? '' : 's') . '://' . ($module_row->meta->host_name ?? null) . '/'.(isset($module_row->meta->allow_direct_login) && $module_row->meta->allow_direct_login == 'false' ? 'index.php' : 'gateway.php')), ['target' => '_blank']);
                         $this->Form->fieldHidden('loginname', ($service_fields->froxlor_username ?? null));
                         $this->Form->fieldHidden('password', ($service_fields->froxlor_password ?? null));
-                        $this->Form->fieldHidden('send', 'send');
                         ?>
-                        <a id="froxlor_login<?php $this->Html->_($service->id);?>" href="#"><?php $this->_('Froxlor.service_info.option_login');?></a>
+                        <a id="froxlor_login<?php $this->Html->_($service->id);?>" href="<?php if(isset($module_row->meta->allow_direct_login) && $module_row->meta->allow_direct_login == 'true'){ echo $this->Html->safe('#'); } else { echo $this->Html->safe('http' . (isset($module_row->meta->use_ssl) && $module_row->meta->use_ssl == 'false' ? '' : 's') . '://' . ($module_row->meta->host_name ?? null) . '/'); } ?>"><?php $this->_('Froxlor.service_info.option_login');?></a>
                         <?php
                         $this->Form->end();
                         ?>
@@ -35,9 +34,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#froxlor_login<?php $this->Html->_($service->id);?>').click(function(e) {
-                e.preventDefault();
-
-                $(this).closest('form').submit();
+                <?php if(isset($module_row->meta->allow_direct_login) && $module_row->meta->allow_direct_login == 'true'){ ?>e.preventDefault();$(this).closest('form').submit();<?php } ?>
             });
         });
     </script>

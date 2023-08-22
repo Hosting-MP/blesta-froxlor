@@ -429,6 +429,9 @@ class Froxlor extends Module
             if (empty($vars['use_ssl'])) {
                 $vars['use_ssl'] = 'false';
             }
+            if (empty($vars['allow_direct_login'])) {
+                $vars['allow_direct_login'] = 'false';
+            }
         }
 
         $this->view->set('vars', (object)$vars);
@@ -460,6 +463,9 @@ class Froxlor extends Module
             if (empty($vars['use_ssl'])) {
                 $vars['use_ssl'] = 'false';
             }
+            if (empty($vars['allow_direct_login'])) {
+                $vars['allow_direct_login'] = 'false';
+            }
         }
 
         $this->view->set('vars', (object)$vars);
@@ -479,12 +485,15 @@ class Froxlor extends Module
      */
     public function addModuleRow(array &$vars)
     {
-        $meta_fields = ['server_name', 'host_name', 'api_key', 'api_secret', 'use_ssl', 'account_limit', 'notes'];
+        $meta_fields = ['server_name', 'host_name', 'api_key', 'api_secret', 'use_ssl', 'allow_direct_login', 'account_limit', 'notes'];
         $encrypted_fields = ['api_key', 'api_secret'];
 
         // Set unspecified checkboxes
         if (empty($vars['use_ssl'])) {
             $vars['use_ssl'] = 'false';
+        }
+        if (empty($vars['allow_direct_login'])) {
+            $vars['allow_direct_login'] = 'false';
         }
 
         $this->Input->setRules($this->getRowRules($vars));
@@ -521,12 +530,15 @@ class Froxlor extends Module
      */
     public function editModuleRow($module_row, array &$vars)
     {
-        $meta_fields = ['server_name', 'host_name', 'api_key', 'api_secret', 'use_ssl', 'account_limit', 'account_count', 'notes'];
+        $meta_fields = ['server_name', 'host_name', 'api_key', 'api_secret', 'use_ssl', 'allow_direct_login', 'account_limit', 'account_count', 'notes'];
         $encrypted_fields = ['api_key', 'api_secret'];
 
         // Set unspecified checkboxes
         if (empty($vars['use_ssl'])) {
             $vars['use_ssl'] = 'false';
+        }
+        if (empty($vars['allow_direct_login'])) {
+            $vars['allow_direct_login'] = 'false';
         }
 
         $this->Input->setRules($this->getRowRules($vars));

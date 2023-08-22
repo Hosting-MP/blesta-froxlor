@@ -45,6 +45,12 @@
                     </li>
                     <li>
                         <?php
+                        $this->Form->fieldCheckbox('allow_direct_login', 'true', ($vars->allow_direct_login ?? 'true') == 'true', ['id'=>'allow_direct_login']);
+                        $this->Form->label($this->_('Froxlor.row_meta.allow_direct_login', true), 'allow_direct_login', ['class'=>'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
                         $this->Form->label($this->_('Froxlor.row_meta.account_limit', true), 'account_limit');
                         $this->Form->fieldText('account_limit', ($vars->account_limit ?? null));
                         ?>

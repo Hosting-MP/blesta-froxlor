@@ -64,6 +64,7 @@ $lang['Froxlor.row_meta.host_name'] = 'Hostname';
 $lang['Froxlor.row_meta.api_key'] = 'API Key';
 $lang['Froxlor.row_meta.api_secret'] = 'API Secret';
 $lang['Froxlor.row_meta.use_ssl'] = 'Use SSL when connecting to the API (recommended)';
+$lang['Froxlor.row_meta.allow_direct_login'] = 'Allow direct login (special configuration required)';
 $lang['Froxlor.row_meta.account_limit'] = 'Account Limit';
 
 // Package fields

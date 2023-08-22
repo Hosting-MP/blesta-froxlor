@@ -5,7 +5,7 @@ This is a module for Blesta that integrates with [Froxlor](https://froxlor.org/)
 ## Install the Module
 
 1. You can install the module by uploading the source code
-to a /components/modules/froxlor/ directory within your Blesta installation path.
+to the /components/modules/froxlor/ directory within your Blesta installation path.
 
     For example:
 
@@ -18,6 +18,14 @@ to a /components/modules/froxlor/ directory within your Blesta installation path
 4. Find the Froxlor module and click the "Install" button to install it
 
 5. You're done!
+
+6. If you want to use the direct login feature, copy the gateway.php into your Froxlor webroot.
+
+    For example:
+
+    ```
+    /var/www/html/Froxlor/gateway.php
+    ```
 
 ### Blesta and Froxlor Compatibility
 
