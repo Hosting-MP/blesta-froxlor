@@ -16,7 +16,7 @@
                     <td><?php echo (isset($service_fields->froxlor_password) ? $this->Html->safe($service_fields->froxlor_password) : null);?></td>
                     <td><?php echo (isset($module_row->meta->host_name) ? $this->Html->safe($module_row->meta->host_name) : null);?></td>
                     <td>
-                        <a href="<?php if(isset($onetime_login_url) && $onetime_login_url != ''){ echo $this->Html->safe($onetime_login_url); } else { echo $this->Html->safe('#'); } ?>"><?php $this->_('Froxlor.service_info.option_login');?></a>
+                        <a href="<?php if(isset($onetime_login_url) && $onetime_login_url != ''){ echo $this->Html->safe('http' . (isset($module_row->meta->use_ssl) && $module_row->meta->use_ssl == 'false' ? '' : 's') . '://' . ($module_row->meta->host_name ?? null) . '/' . $onetime_login_url['uri']); } else { echo $this->Html->safe('#'); } ?>"><?php $this->_('Froxlor.service_info.option_login');?></a>
                     </td>
                 </tr>
             </tbody>
