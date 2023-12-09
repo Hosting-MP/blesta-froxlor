@@ -65,7 +65,7 @@ $lang['Froxlor.row_meta.api_key'] = 'API Key';
 $lang['Froxlor.row_meta.api_secret'] = 'API Secret';
 $lang['Froxlor.row_meta.use_ssl'] = 'Use SSL when connecting to the API (recommended)';
 $lang['Froxlor.row_meta.account_limit'] = 'Account Limit';
-$lang['Froxlor.row_meta.otl_time_limit'] = 'Expiration direct login link (in seconds)';
+$lang['Froxlor.row_meta.otl_time_limit'] = 'Expiration of direct login link (in seconds)';
 
 // Package fields
 $lang['Froxlor.package_fields.package'] = 'Froxlor Package';
