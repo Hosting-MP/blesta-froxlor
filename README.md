@@ -19,18 +19,12 @@ to the /components/modules/froxlor/ directory within your Blesta installation pa
 
 5. You're done!
 
-6. If you want to use the direct login feature, copy the gateway.php into your Froxlor webroot.
-
-    For example:
-
-    ```
-    /var/www/html/Froxlor/gateway.php
-    ```
 
 ### Blesta and Froxlor Compatibility
 
 |Blesta Version|Froxlor Version|Module Version|
 |--------------|---------------|--------------|
+| > v5.8.2     | > v2.1.0      | v2.0.1       |
 | > v5.8.0     | > v2.0.21     | v2.0.0       |
 | > v5.0.0     | > v10.3       | v1.1.0       |
 | >= v4.1.0    | > v10.0       | v1.0.0       |

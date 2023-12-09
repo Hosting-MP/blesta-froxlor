@@ -429,9 +429,6 @@ class Froxlor extends Module
             if (empty($vars['use_ssl'])) {
                 $vars['use_ssl'] = 'false';
             }
-            if (empty($vars['allow_direct_login'])) {
-                $vars['allow_direct_login'] = 'false';
-            }
         }
 
         $this->view->set('vars', (object)$vars);
@@ -463,9 +460,6 @@ class Froxlor extends Module
             if (empty($vars['use_ssl'])) {
                 $vars['use_ssl'] = 'false';
             }
-            if (empty($vars['allow_direct_login'])) {
-                $vars['allow_direct_login'] = 'false';
-            }
         }
 
         $this->view->set('vars', (object)$vars);
@@ -485,15 +479,12 @@ class Froxlor extends Module
      */
     public function addModuleRow(array &$vars)
     {
-        $meta_fields = ['server_name', 'host_name', 'api_key', 'api_secret', 'use_ssl', 'allow_direct_login', 'account_limit', 'notes'];
+        $meta_fields = ['server_name', 'host_name', 'api_key', 'api_secret', 'use_ssl', 'otl_time_limit', 'account_limit', 'notes'];
         $encrypted_fields = ['api_key', 'api_secret'];
 
         // Set unspecified checkboxes
         if (empty($vars['use_ssl'])) {
             $vars['use_ssl'] = 'false';
-        }
-        if (empty($vars['allow_direct_login'])) {
-            $vars['allow_direct_login'] = 'false';
         }
 
         $this->Input->setRules($this->getRowRules($vars));
@@ -530,15 +521,12 @@ class Froxlor extends Module
      */
     public function editModuleRow($module_row, array &$vars)
     {
-        $meta_fields = ['server_name', 'host_name', 'api_key', 'api_secret', 'use_ssl', 'allow_direct_login', 'account_limit', 'account_count', 'notes'];
+        $meta_fields = ['server_name', 'host_name', 'api_key', 'api_secret', 'use_ssl', 'otl_time_limit', 'account_limit', 'account_count', 'notes'];
         $encrypted_fields = ['api_key', 'api_secret'];
 
         // Set unspecified checkboxes
         if (empty($vars['use_ssl'])) {
             $vars['use_ssl'] = 'false';
-        }
-        if (empty($vars['allow_direct_login'])) {
-            $vars['allow_direct_login'] = 'false';
         }
 
         $this->Input->setRules($this->getRowRules($vars));
@@ -1524,6 +1512,25 @@ class Froxlor extends Module
         $this->view->set('service', $service);
         $this->view->set('service_fields', $service_fields);
 
+        // Initialize API
+        $api = $this->getApi(
+            $module_row->meta->host_name,
+            $module_row->meta->api_key,
+            $module_row->meta->api_secret,
+            $module_row->meta->use_ssl
+        );
+        $onetime_login_url = "";
+
+        // Retrieve onetime login link
+        try {
+            $this->log($module_row->meta->host_name . '|Froxlor.generateLoginLink', serialize(['loginname' => $service_fields->froxlor_username, 'valid_time' => $module_row->meta->otl_time_limit]), 'input', true);
+            $onetime_login_url = $this->parseResponse($api->request('Froxlor.generateLoginLink', ['loginname' => $service_fields->froxlor_username, 'valid_time' => $module_row->meta->otl_time_limit]), $api->getLastStatusCode());
+        } catch (Exception $e) {
+            // API request failed
+        }
+
+        $this->view->set('onetime_login_url', $onetime_login_url);
+
         return $this->view->fetch();
     }
 
@@ -1555,6 +1562,25 @@ class Froxlor extends Module
         $this->view->set('package', $package);
         $this->view->set('service', $service);
         $this->view->set('service_fields', $service_fields);
+
+        // Initialize API
+        $api = $this->getApi(
+            $module_row->meta->host_name,
+            $module_row->meta->api_key,
+            $module_row->meta->api_secret,
+            $module_row->meta->use_ssl
+        );
+        $otl_url = "";
+
+        // Retrieve onetime login link
+        try {
+            $this->log($module_row->meta->host_name . '|Froxlor.generateLoginLink', serialize(['loginname' => $service_fields->froxlor_username, 'valid_time' => $module_row->meta->otl_time_limit]), 'input', true);
+            $otl_url = $this->parseResponse($api->request('Froxlor.generateLoginLink', ['loginname' => $service_fields->froxlor_username, 'valid_time' => $module_row->meta->otl_time_limit]), $api->getLastStatusCode());
+        } catch (Exception $e) {
+            // API request failed
+        }
+
+        $this->view->set('onetime_login_url', $otl_url);
 
         return $this->view->fetch();
     }
@@ -2180,6 +2206,12 @@ class Froxlor extends Module
                     'message'=>Language::_('Froxlor.!error.api_secret_valid_connection', true)
                 ]
             ],
+            'otl_time_limit'=>[
+                'valid'=>[
+                    'rule'=>['between', '10', '120', true],
+                    'message'=>Language::_('Froxlor.!error.otl_time_limit_valid', true)
+                ]
+            ],
             'account_limit'=>[
                 'valid'=>[
                     'rule'=>['matches', '/^([0-9]+)?$/'],
@@ -2245,6 +2277,12 @@ class Froxlor extends Module
                         // Create a new CSV list that we've formatted
                         return implode(',', $this->parseElementsFromCsv($domains_csv));
                     }
+                ]
+            ],
+            'meta[otl_time_limit]' => [
+                'valid' => [
+                    'rule' => ['matches', '/^([0-9]+)?$/'],
+                    'message' => Language::_('Froxlor.!error.meta[otl_time_limit].valid', true),
                 ]
             ],
             'meta[account_limit]' => [

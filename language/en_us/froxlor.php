@@ -64,8 +64,8 @@ $lang['Froxlor.row_meta.host_name'] = 'Hostname';
 $lang['Froxlor.row_meta.api_key'] = 'API Key';
 $lang['Froxlor.row_meta.api_secret'] = 'API Secret';
 $lang['Froxlor.row_meta.use_ssl'] = 'Use SSL when connecting to the API (recommended)';
-$lang['Froxlor.row_meta.allow_direct_login'] = 'Allow direct login (special configuration required)';
 $lang['Froxlor.row_meta.account_limit'] = 'Account Limit';
+$lang['Froxlor.row_meta.otl_time_limit'] = 'Expiration direct login link (in seconds)';
 
 // Package fields
 $lang['Froxlor.package_fields.package'] = 'Froxlor Package';
@@ -181,6 +181,7 @@ $lang['Froxlor.!error.api_key_valid'] = 'The API Key appears to be invalid.';
 $lang['Froxlor.!error.api_secret_valid'] = 'The API Secret appears to be invalid.';
 $lang['Froxlor.!error.api_secret_valid_connection'] = 'A connection to the server could not be established. Please check to ensure that the Hostname, API Key and API Secret are correct.';
 $lang['Froxlor.!error.account_limit_valid'] = 'Account Limit must be left blank (for unlimited accounts) or set to some integer value.';
+$lang['Froxlor.!error.otl_time_limit_valid'] = 'Direct login link must be set to some integer value between 10 and 120 seconds.';
 $lang['Froxlor.!error.api.internal'] = 'An internal error occurred, or the server did not respond to the request.';
 $lang['Froxlor.!error.module_row.missing'] = 'An internal error occurred. The module row is unavailable.';
 
@@ -198,6 +199,7 @@ $lang['Froxlor.!error.meta[account_type].valid'] = 'Account type must be either 
 $lang['Froxlor.!error.meta[sub_domains].valid'] = 'Enable Sub-Domains must be set to either enable or disable.';
 $lang['Froxlor.!error.meta[domains_list].valid'] = 'At least one available domain must be set and they must all represent a valid host name.';
 $lang['Froxlor.!error.meta[account_limit].valid'] = 'Account limit must be a number.';
+$lang['Froxlor.!error.meta[otl_time_limit].valid'] = 'Direct login link expiration must be a number.';
 $lang['Froxlor.!error.meta[api_allowed].valid'] = 'Grand API access must be set to either enable or disable.';
 // admin meta package error messages
 $lang['Froxlor.!error.meta[customers].format'] = 'Admin customer limit must be a number between -1 and 999999.';

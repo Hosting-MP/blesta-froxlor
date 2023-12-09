@@ -45,8 +45,8 @@
                     </li>
                     <li>
                         <?php
-                        $this->Form->fieldCheckbox('allow_direct_login', 'true', ($vars->allow_direct_login ?? 'true') == 'true', ['id'=>'allow_direct_login']);
-                        $this->Form->label($this->_('Froxlor.row_meta.allow_direct_login', true), 'allow_direct_login', ['class'=>'inline']);
+                        $this->Form->label($this->_('Froxlor.row_meta.otl_time_limit', true), 'otl_time_limit');
+                        $this->Form->fieldText('otl_time_limit', ($vars->otl_time_limit ?? null));
                         ?>
                     </li>
                     <li>

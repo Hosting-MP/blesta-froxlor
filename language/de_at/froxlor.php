@@ -64,8 +64,8 @@ $lang['Froxlor.row_meta.host_name'] = 'Hostname';
 $lang['Froxlor.row_meta.api_key'] = 'API Key';
 $lang['Froxlor.row_meta.api_secret'] = 'API Secret';
 $lang['Froxlor.row_meta.use_ssl'] = 'SSL für den Aufruf der API verwenden (empfohlen)';
-$lang['Froxlor.row_meta.allow_direct_login'] = 'Direkten Login zulassen (gesonderte Konfiguration beachten)';
 $lang['Froxlor.row_meta.account_limit'] = 'Kontenlimit';
+$lang['Froxlor.row_meta.otl_time_limit'] = 'Gültigkeitsdauer Direktlogin-Link (in Sekunden)';
 
 // Package fields
 $lang['Froxlor.package_fields.package'] = 'Froxlor Packet';
@@ -181,6 +181,7 @@ $lang['Froxlor.!error.api_key_valid'] = 'Der API Key scheint ungültig zu sein.'
 $lang['Froxlor.!error.api_secret_valid'] = 'Der API Secret scheint ungültig zu sein.';
 $lang['Froxlor.!error.api_secret_valid_connection'] = 'Es konnte keine Verbindung zum Server hergestellt werden. Bitte prüfe, dass der Hostname, API Key und API Secret richtig sind.';
 $lang['Froxlor.!error.account_limit_valid'] = 'Das Feld für das Kontenlimit muss leer gelassen werden (für unbegrenzt) oder mit einer Zahl gefüllt werden.';
+$lang['Froxlor.!error.otl_time_limit_valid'] = 'Das Feld für die Gültigkeitsdauer des Direktlogin-Links muss mit einer Zahl zwischen 10 und 120 Sekunden gefüllt werden.';
 $lang['Froxlor.!error.api.internal'] = 'Ein interner Fehler ist aufgetreten oder der Server antwortet nicht.';
 $lang['Froxlor.!error.module_row.missing'] = 'Ein interner Server ist aufgetreten. Die Modulspalte (module row) fehlt.';
 
@@ -198,6 +199,7 @@ $lang['Froxlor.!error.meta[account_type].valid'] = 'Es können nur Customer oder
 $lang['Froxlor.!error.meta[sub_domains].valid'] = 'Die Subdomain kann nur aktiviert oder deaktiviert werden.';
 $lang['Froxlor.!error.meta[domains_list].valid'] = 'Die Domain Liste ist keine gültige CSV Liste.';
 $lang['Froxlor.!error.meta[account_limit].valid'] = 'Das Kontenlimit ist kein gültiger Wert.';
+$lang['Froxlor.!error.meta[otl_time_limit].valid'] = 'Das Zeitlimit für die Gültigkeit des Direktlogin-Links ist kein gültiger Wert.';
 $lang['Froxlor.!error.meta[api_allowed].valid'] = 'Der API Zugriff kann nur aktiviert oder deaktiviert werden.';
 // admin meta package error messages
 $lang['Froxlor.!error.meta[customers].format'] = 'Das Admin Kundenlimit muss eine Zahl zwischen -1 und 999999 sein.';
