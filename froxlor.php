@@ -1974,23 +1974,12 @@ class Froxlor extends Module
             $module_row->meta->use_ssl
         );
 
-        // Get minimum password lenght
-        $password_lenght = 10;
-
-        try {
-            $this->log($module_row->meta->host_name . '|Froxlor.getSetting', serialize(['key' => 'panel.password_min_length']), 'input', true);
-            $password_lenght = $this->parseResponse($api->request('Froxlor.getSetting'), ['key' => 'panel.password_min_length'], $api->getLastStatusCode());
-            //$this->log($module_row->meta->host_name . '|Froxlor.getSetting', serialize($password), 'output', !empty($password));
-        } catch (Exception $e) {
-            // API request failed
-        }
-
         // Generate random password
         $password = null;
 
         try {
-            $this->log($module_row->meta->host_name . '|Froxlor.generatePassword', serialize(['length' => $password_lenght]), 'input', true);
-            $password = $this->parseResponse($api->request('Froxlor.generatePassword'), ['length' => $password_lenght], $api->getLastStatusCode());
+            $this->log($module_row->meta->host_name . '|Froxlor.generatePassword', serialize($module_row->meta->host_name), 'input', true);
+            $password = $this->parseResponse($api->request('Froxlor.generatePassword'), $api->getLastStatusCode());
             //$this->log($module_row->meta->host_name . '|Froxlor.generatePassword', serialize($password), 'output', !empty($password));
         } catch (Exception $e) {
             // API request failed
